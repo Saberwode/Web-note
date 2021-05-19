@@ -97,3 +97,5 @@ checked主要针对单选框和复选框，一打开网页就可以默认选中�
 
 disabled属性：使表单变灰色，用户不能向其输入任何数据
 
+label 用于绑定input，其中`<label for="xx">`与`<input id="xx">`相对应，当点击label中的内容时，就会聚焦到input里面
+
