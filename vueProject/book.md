@@ -31,7 +31,7 @@
 						{{item.count}}
 						<button @click="countUp(index)">+</button>
 					</td>
-					<td><button>移除</button></td>
+					<td><button @click="remove(index)">移除</button></td>
 				</tr>
 			</tbody>
 		</table>
@@ -81,6 +81,9 @@
 				},
 				thePrice(price) {
 					return '￥' + parseInt(price).toFixed(2)
+				},
+				remove(index) {
+					this.books.splice(index, 1);
 				}
 			},
 		})
