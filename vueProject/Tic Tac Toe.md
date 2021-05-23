@@ -8,7 +8,8 @@
 - 绑定网格id
 - 点击网格，向父组件传递id值
 - 父组件接收到id，会对其进行计数，初始为0接受到一次id，计数加一（第一次接受id，count =1）
-- 判断逻辑，如果count为奇数，对子组件进行写回，修改其`player`值为`0`为偶数就修改为`1`（待实现）
+- 判断逻辑，如果count为奇数，且clickstats为1，修改其`player`值为`1`为偶数就修改为`2`,`clicktats`值置0
+- 判断逻辑，如果点击过该网格（clickstats == 0），此次点击次数作废，player数值不变
 
 ```html
 <!DOCTYPE html>
@@ -138,6 +139,19 @@
             data: {
                 // 记录点击次数，奇数为玩家一，偶数为玩家二
                 clickCount: 0,
+                // 记录子组件的状态
+                childstats: [
+                    { id: '1', click_state: '1', player: '' },
+                    { id: '2', click_state: '1', player: '' },
+                    { id: '3', click_state: '1', player: '' },
+                    { id: '4', click_state: '1', player: '' },
+                    { id: '5', click_state: '1', player: '' },
+                    { id: '6', click_state: '1', player: '' },
+                    { id: '7', click_state: '1', player: '' },
+                    { id: '8', click_state: '1', player: '' },
+                    { id: '9', click_state: '1', player: '' },
+                ]
+
             },
             components: {
                 block1,
@@ -147,9 +161,38 @@
             methods: {
                 // 获取从子组件传过来的id
                 getChildId(id) {
+                    console.log('这个是id');
                     console.log(id);
+                    // console.log(typeof id);
                     this.clickCount++;
                     // console.log(this.clickCount);
+                    // 奇数为玩家一，偶数为玩家二
+                    for (let item of this.childstats) {
+                        // console.log(item.player);
+                        if (item.id == id) {
+                            // console.log('查询成功');
+                            // 如果查询到已经点击过了，此次点击次数作废
+                            if (item.click_state == '0') {
+                                this.clickCount--;
+                            }
+                            // 奇数为玩家一
+                            if (this.clickCount % 2 == 1 && item.click_state == '1') {
+                                item.player = '1';
+                                // 将点击状态置0，表示已经点击过了
+                                item.click_state = '0';
+                                // console.log('赋值成功');
+                                // 偶数为玩家二
+                            } else if (this.clickCount % 2 == 0 && item.click_state == '1') {
+                                item.player = '2';
+                                item.click_state = '0';
+                            }
+
+                        }
+                    }
+                    for (let item of this.childstats) {
+                        console.log(item.player);
+                    }
+
                 }
 
             }
