@@ -798,3 +798,410 @@ const obj = {
 }
 ```
 
+
+
+## 5.20
+
+#### 1.变更方法（触发响应式的方法）：
+
+- `push()`
+- `pop()`
+- `shift()`
+- `unshift()`
+- `splice()`
+- `sort()`
+- `reverse()`
+
+使用这些方法对数组进行操作，会使页面更新。
+
+变更方法会==改变原始数组==
+
+
+
+#### 2.替换数组：
+
+替换数组会返回一个新的数组，如（`filter()`、`concat()` 和 `slice()`）
+
+
+
+#### 3.由于 JavaScript 的限制，Vue **不能检测**数组和对象的变化：
+
+==待补充==
+
+补充：
+
+> 在vue中，有时候你修改了数组的某一项值或索引时，视图并未如你想的那样发生变化，虽然你修改了数组但是视图上显示的还是未修改时的值。
+
+```js
+//由于 JavaScript 的限制，Vue 不能检测以下变动的数组：
+//（1）当你利用索引直接设置一个项时，例如：
+vm.items[indexOfItem] = newValue
+//（2）当你修改数组的长度时，例如：
+vm.items.length = newLength
+```
+
+官方的解决方案：
+
+```js
+// Vue.set
+Vue.set(vm.items, indexOfItem, newValue)
+
+// Array.prototype.splice
+vm.items.splice(indexOfItem, 1, newValue)
+```
+
+> 基本解决办法是： this.$set(obj, 'a', 'xxx')
+>
+> 如果是在watch中，观察变量值val的话，就是 val: {handler: ()=>{xxx}, deep: true }
+>
+> 通过设置deep:true的方式
+
+#### 4.v-for可以接受整数：
+
+比如：
+
+```html
+<span v-for="n in 10">{{n}}</span>
+//正常输出结果应该是1,2...10
+```
+
+
+
+#### 5.filter()函数：
+
+```js
+const nums = [10,20,111,222,333,444];
+//let newNums = nums.filter(function (n){
+let newNums = nums.filter((n)=>{
+return n <100
+})
+```
+
+上述例子就是过滤掉小于100的数字，filter过滤返回的是一个新的数组，不会对旧的数组有所改动。
+
+其中具体的过滤方法就是将nums中的数据传入filter中，将其赋值给n，如果n 不满足返回条件，返回一个false，那么n就不会被加入到新的数组里，反之，就可以加到新的数组里面。
+
+
+
+#### 6.map()函数：
+
+```js
+//let new2Nums = newNums.map(function(n){
+let new2Nums = newNums.map((n)=>{
+return n*2;
+})
+```
+
+上述例子中，map的作用是遍历，将newnums中的值，一个个的传入赋值给n，然后进行×2的操作。
+
+
+
+#### 7.reduce()函数：
+
+```js
+//ler new3Nums = newNums.reduce(function(preValue,n){
+ler new3Nums = newNums.reduce((preValue,n)=>{
+	return preValue + n;
+},0)
+```
+
+上述例子中，`reduce(参数1，参数2)其中参数1是一个function(前一个return值，传入数组的值)`，其中参数2是预设的初值，因为第一次prevalue是没有前一次的返回值的，所以就需要对其设置一个初值，之后每次的return值，都会赋值给prevalue，也就是本例中的(prevalue = prevalue + n;)
+
+
+
+#### 8.v-model指令实例：
+
+v-model绑定的是value值。
+
+> 单选框
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="app">
+        <label for="male">
+            <input type="radio" id="male" value="男" v-model="sex">男
+        </label>
+        <label for="female">
+            <input type="radio" id="female" value="女" v-model="sex">女
+        </label>
+        <h2>您选择的性别是：{{sex}}</h2>
+    </div>
+    <script src="vue.js">
+    </script>
+    <script>
+        const app = new Vue({
+            el:'#app',
+            data:{
+                message:'你好',
+                sex:''
+            }
+        })
+    </script>
+</body>
+</html>
+```
+
+上述例子实现双向绑定sex
+
+> 复选框
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="app">
+<!--        <label for="male">-->
+<!--            <input type="radio" id="male" value="男" v-model="sex">男-->
+<!--        </label>-->
+<!--        <label for="female">-->
+<!--            <input type="radio" id="female" value="女" v-model="sex">女-->
+<!--        </label>-->
+<!--        <h2>您选择的性别是：{{sex}}</h2>-->
+        <input type="checkbox" value="篮球" v-model="hobbies">篮球
+        <input type="checkbox" value="足球" v-model="hobbies">足球
+        <input type="checkbox" value="乒乓球" v-model="hobbies">乒乓球
+        <input type="checkbox" value="羽毛球" v-model="hobbies">羽毛球
+        <h2>您的爱好是：{{hobbies}}</h2>
+    </div>
+    <script src="vue.js">
+    </script>
+    <script>
+        const app = new Vue({
+            el:'#app',
+            data:{
+                message:'你好',
+                sex:'',
+                hobbies:[],
+            }
+        })
+    </script>
+</body>
+</html>
+```
+
+<img src="C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210520152021154.png" alt="image-20210520152021154" style="zoom: 33%;" />
+
+<img src="C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210520152137193.png" alt="image-20210520152137193" style="zoom:50%;" />
+
+
+
+
+
+## 5.21
+
+#### 1.组件化基本使用：
+
+（1）创建组件构造器对象：
+
+```js
+const cpnC = Vue.extend({
+			//template:组件自定义的模板。
+            template: "<div>\n" +
+                "                <h2>我是标题</h2>\n" +
+                "                <p>我是内容1</p>\n" +
+                "                <p>我是内容2</p>\n" +
+                "            </div>"
+        })
+```
+
+（2）注册组件
+
+```js
+Vue.component('my-cpn',cpnC)
+```
+
+（3）实例化Vue
+
+```js
+const app = new Vue({
+            el:'#app',
+            data:{
+
+            }
+        })
+```
+
+
+
+#### 2.模板的分离写法：
+
+- #### script标签
+
+  ```html
+  <script type="text/x-template" id="cpn">
+      <div>
+          <h2>我是标题</h2>
+      </div>
+  </script>
+  ```
+
+  ```js
+  //直接注册全局组件，创建构造器的过程有上面替代，利用script的方法
+  Vue.component('my-cpn',{
+              template:"#cpn"
+          })
+  ```
+
+- #### template标签
+
+  ```html
+  <template id="cpn">
+          <div>
+              <h2>我也是标题</h2>
+          </div>
+  </template>
+  ```
+
+  ```js
+  //直接注册全局组件，创建构造器的过程有上面替代，利用template的方法
+  Vue.component('my-cpn',{
+              template:"#cpn"
+          })
+  ```
+
+
+
+#### 3.组件不能访问Vue实例中的data：
+
+组件有自己的data
+
+
+
+#### 4.组件中data必须是函数：
+
+```js
+Vue.component("cpn",{
+	template:'#cpn',
+	data(){
+		return {
+			counter:0
+		}
+	}
+})
+```
+
+data函数返回值是一个对象，每次实例化一个组件，这个组件就会返回一个独立的对象，各个组件互不影响
+
+```js
+//如果data只是简单的是一个值或者一个对象的话data:{	message:'name'}
+```
+
+对该组件的修改会影响到其他组件，这肯定不行啊。
+
+所以data不是函数的话会直接报错，就不给你这个机会。
+
+
+
+#### 5.父子传参
+
+- 首先要在父组件上面定义要传递的参数，比如本例的message（定义在data里面）
+- 子组件定义，利用`<template>`模板将子组件进行定义，在props属性中，定义用于==接收父组件参数==的==子组件参数==
+- 在components中，将子组件的名称写上去，说明关系，这个组件是父组件的子组件
+- 此时，在子组件中，就可以使用父组件中的参数了（data中的内容）
+- 使用的时候需要在子组件的实例中，声明子组件参数与父组件参数的对应关系`:cmessage='message'`必须要添加`v-bind:`指令进行绑定
+
+```html
+<!doctype html><html lang="en"><head>    <meta charset="UTF-8">    <meta name="viewport"          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">    <meta http-equiv="X-UA-Compatible" content="ie=edge">    <title>Document</title></head><body><div id="app">    <cpn :cmovies="movies" :cmessage="message"></cpn></div><template id="cpn">    <div>        <!--        子元素中有父元素的值，这就是父传子-->        <p>{{cmovies}}</p>        <h2>{{cmessage}}</h2>    </div></template><script src="vue.js"></script><script>    const cpn = {        template: "#cpn",        props: ['cmovies', 'cmessage'],        data() {            return {}        }    }    const app = new Vue({        el: '#app',        data: {            message: '你好',            movies: ['海王', '海贼王']        },        components: {            cpn        }    })</script></body></html>
+```
+
+props:的几种写法：
+
+```js
+//数组props:['cmovies','cmessage']
+```
+
+```
+//对象props:{	//1.类型限制：	cmovies:Array,	cmessage:String,	//2.提供默认值：	vmessage:{		type:String,		default:'aaaa',	}}
+```
+
+```js
+//带有默认值的对象props:{	type:object,	default(){		return {message:'hello'}	}}//自定义验证函数props:{	validator(value){		return ['success','warning','danger'].indexOf(value) !== -1	}}
+```
+
+```js
+//自定义类型person(firstName,lastName)=>{	this.firstName = firstName	this.lastName = lastName}Vue.component('blog-post',{    porps:{        author:Person    }})
+```
+
+
+
+#### 6.子传父
+
+- 子传父一般是传递一个事件，然后由父组件向服务器进行请求
+
+- 首先子组件定义一个点击`@click`事件，并向事件传递一个对象参数，事件的名称是`btnclick`
+
+- 接着在子组件中的methods方法中，对`btnclick`方法进行定义`this.$emit('itemclick', item)`，他利用`this.$emit`发送一个事件，事件名称叫`itemclick`
+
+- 然后父组件中对事件进行监听，`@intemclick='cpnclick'`当监听到`itemclick`事件时，调用`cpnclick`函数。
+
+- 接着在父组件中对`cpnclick`方法进行定义，因为在监听的时候填的`@itemclick='cpnclick'`中并没有填参数，所以传递过来的是默认参数==我写的自定义事件传过来的值==
+
+  > 此处再引申一下，如果是`button`标签中的`btnclick事件不填参数的话`默认传过去的参数是`event`事件
+
+```html
+<!DOCTYPE html><html lang="en"><head>    <meta charset="UTF-8">    <title>Title</title></head><body><!--    父组件--><div id="app">    <cpn @itemclick="cpnclick"></cpn></div><!--子组件模板--><template id="cpn">    <div>        <button v-for="item in categories" @click="btnclick(item)">{{item.name}}</button>    </div></template><script src="vue.js"></script><script>    // 子组件    const cpn = {        template: '#cpn',        data() {            return {                categories: [                    {id: 'aa', name: '热门推荐'},                    {id: 'bb', name: '手机数码'},                    {id: 'cc', name: '家用电器'},                    {id: 'dd', name: '电脑办公'},                ]            }        },        methods: {            btnclick(item) {                this.$emit('itemclick', item)            }        }    }    // 父组件    const app = new Vue({        el: '#app',        data: {            messsage: '你好'        },        components: {            cpn        },        methods: {            cpnclick(item) {                console.log('cpnclick', item);            }        }    })</script></body></html>
+```
+
+
+
+#### 7.用户输入：
+
+input监听用户输入的事件：`@input`，其默认传入的值是event，获取用户输入的内容：`envent.target.value`
+
+
+
+#### 8.访问子组件：
+
+通过`$refs`，具体用法就是在子组件中添加`refs='aaa'`属性
+
+`$refs`是对象类型，默认是一个空的对象
+
+
+
+## 5.22
+
+#### 1.Vue CLI目录：
+
+<img src="C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210522211919075.png" alt="image-20210522211919075" style="zoom:67%;" />
+
+![image-20210522213941356](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210522213941356.png)
+
+hello						//项目名
+
+​	-build					//用来使用webpack打包build依赖
+
+​	-config					//用来做整个项目配置目录
+
+​	-node_modules	//用来管理项目中使用的依赖
+
+​	-src							//用来书写vue的源代码【重点】
+
+​		-assets					//用来存放静态资源【重点】
+
+​		-components		//用来书写vue组件【重点】
+
+​		-router					//用于配置项目中的路由【重点】
+
+​		-App.vue				//项目中的根组件【重点】
+
+​		-main.js					//项目中的主入口【重点】
+
+
+
+#### 2.在main.js中，开头
+
+`import Vue from 'Vue'`	//从node_modules中引入vue.js文件，应该就是以前不用脚手架的时候`<script scr='vue.js'>`中的内容是一样的效果。
+
+`import App from './App'` //引入自定义的组件，就是那个App.vue 十分显眼
+
+`import router from './router'` //引入路由

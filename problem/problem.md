@@ -30,3 +30,22 @@
 
 <img src="C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210521132652933.png" alt="image-20210521132652933" style="zoom:50%;" />
 
+
+
+#### 2.注意`string`类型和`number`类型比较会出问题
+
+```js
+for (let item of this.childstats) {
+                        // console.log(item.id);
+                        if (item.player === "1") {
+                            this.newarr.splice(-1, 0, (item.id));
+
+                        }
+                        if (item.player === "2") {
+                            this.newarr2.splice(-1, 0, parseInt(item.id));
+
+                        }
+                    }
+```
+
+比如上面的player1就是没有进行类型转换，所以结果就会出错
