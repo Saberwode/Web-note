@@ -58,3 +58,15 @@ for (let item of this.childstats) {
 
 所以要在子组件中提前通过循环渲染好。
 
+
+
+#### 4.![image-20210526094044980](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210526094044980.png)
+
+> #### Vue：The template root requires exactly one element.的解决办法
+
+这是因为vue的模版中只有能一个根节点，所以在`<template>`中插入第二个元素就会报错
+
+解决方案：
+
+将`<template>`中的元素用一个大的`<div>`包起来，这样就可以在其中添加多个元素了
+
