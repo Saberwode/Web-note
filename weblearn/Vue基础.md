@@ -1,6 +1,259 @@
-## 5.19
+## 5.16学习
 
-#### 1.v-pre:
+#### 1.第一个例子：
+
+```html
+<div id="app">
+  {{ message }}
+</div>
+```
+
+```js
+var app = new Vue({
+  el: '#app',
+  data: {
+    message: 'Hello Vue!'
+  }
+})
+```
+
+前者设置了一个div块，有一个id属性为"app"，后面vue应用将div与其绑定，通过其中的"el:" element
+
+通过id，与这个div绑定。
+
+然后数据区定了一个名为"message"的字符串，内容为"hello vue"
+
+前者div将 "message"作为显示内容。
+
+
+
+#### 2.新的绑定形式：
+
+```html
+<div id="app-2">
+  <span v-bind:title="message">
+    鼠标悬停几秒钟查看此处动态绑定的提示信息！
+  </span>
+</div>
+```
+
+```js
+var app2 = new Vue({
+  el: '#app-2',
+  data: {
+    message: '页面加载于 ' + new Date().toLocaleString()
+  }
+})
+```
+
+在<>中加入了 v-bind，将span的title属性与之绑定，结果就是 title所显示的value值就是message的内容。
+
+（个人认为：v不就是Vue嘛，bind：捆绑 加起来就是绑定vue）
+
+> 大部分的时候会将v-bind隐藏，直接使用 :title="message"
+
+
+
+#### 3.条件循环：
+
+一样的道理，条件就是`v-if`
+
+```html
+<div id="app-3">
+  <p v-if="seen">现在你看到我了</p>
+</div>
+```
+
+```js
+var app3 = new Vue({
+  el: '#app-3',
+  data: {
+    seen: true
+  }
+})
+```
+
+这里`v-if`的值为`true`，所以这个p标签是生效的，如果`seen`的值改为`flase`那么p标签就会消失。
+
+> v-if 与 v-show的区别：
+>
+> v-if :true/false 渲染/不渲染（元素是不会存在的）
+>
+> v-show：true/false 显示/隐藏（元素是依然存在的）
+
+循环：
+
+```html
+<div id="app-4">
+  <ol>
+    <li v-for="todo in todos">
+      {{ todo.text }}
+    </li>
+  </ol>
+</div>
+```
+
+```js
+var app4 = new Vue({
+  el: '#app-4',
+  data: {
+    todos: [
+      { text: '学习 JavaScript' },
+      { text: '学习 Vue' },
+      { text: '整个牛项目' }
+    ]
+  }
+})
+```
+
+这里面的 `v-for="tode in todes"`是一个简单的迭代，~~与`for(let todo in todos){}`应该是等价的~~（错了）
+
+将todo的值遍历出来。
+
+> v-for="todo in todos"可能更对应for(let todo of todos){}
+
+==注意==
+
+误区：
+
+for in遍历的是数组的索引（键名）
+
+而for of 遍历的是数组的元素值。这两个差别可大了，一个是前面的名字，一个是后面的值
+
+可以这么理解，==for in遍历出的索引，索引.value()就是for of遍历出的数值。==
+
+for of 遍历的只是数组内的元素，不包括数组的原型属性method和索引name。
+
+一个for of 循环每次迭代后都会返回一个形式为[key, value]的数组。
+
+
+
+可以通过`app4.todos.push({})`去添加一个新的列表内容。
+
+==注意==
+
+> 列表渲染要注意添加 :key="xxx"确保key不重复
+
+==待日后补充==此处留一个疑问
+
+
+
+#### 4.事件：
+
+```html
+<div id="app-5">
+  <p>{{ message }}</p>
+  <button v-on:click="reverseMessage">反转消息</button>
+</div>
+```
+
+```js
+var app5 = new Vue({
+  el: '#app-5',
+  data: {
+    message: 'Hello Vue.js!'
+  },
+  methods: {
+    reverseMessage: function () {
+      this.message = this.message.split('').reverse().join('')
+    }
+  }
+})
+```
+
+同样的，通过很相似的==v-on:click==，绑定按钮点击事件。
+
+在下面的vue中，多出了一个==methods（方法）==里面存放的是该元素所用到的方法。
+
+
+
+#### 5.双向绑定==v-model==
+
+```html
+<div id="app-6">
+  <p>{{ message }}</p>
+  <input v-model="message">
+</div>
+```
+
+```js
+var app6 = new Vue({
+  el: '#app-6',
+  data: {
+    message: 'Hello Vue!'
+  }
+})
+```
+
+![image-20210516234224277](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210516234224277.png)
+
+其中神奇的效果就是，你改变==input==中的值，上面的==p==标签中的值也会改变，这就是双向绑定的视觉体现。
+
+
+
+#### 5.vue也有一些内置的方法：
+
+内置方法用 $与自定义的做区分。
+
+`$watch('a',function(newValue, oldValue){})`这个方法可以返回属性a的更改后的新值，与之前未更改的旧值。
+
+
+
+#### 6.v-once指令：
+
+只渲染元素和组件一次, 这可以用优化更新性vue里就出现了一种=>代替不了function的情况： 在声明data和生命周期函数中如：mounted，created等的情况下，依然要用function或函数名+()的方式来声明函数能. 执行一次性地插值，当数据改变时，插值处的内容不会更新。
+
+
+
+#### 7.v-html：
+
+`v-html="url"`这个指令的意思就是，要你用`html`的形式去显示`url`这个字符串，比如：
+
+```html
+<h2 v-html="url"></h2>
+//前面省略
+data:{
+	url:'<a href="http://www.bilibili.com">这里是哔哩哔哩</a>'
+}
+```
+
+
+
+#### 8.v-text:
+
+它跟mustache语法很相似{{message}}，但是它没有mustache灵活，所以一般是不用的。
+
+
+
+#### 9.Mustache语法：
+
+> Mustache是一个logic-less（轻逻辑）模板解析引擎，它是为了使用户界面与业务数据（内容）分离而产生的，它可以生成特定格式的文档，通常是标准的HTML文档。
+
+语法模板：
+
+- {{keyName}}
+- {{{keyName}}}
+- {{#keyName}} {{/keyName}}
+- {{^keyName}} {{/keyName}}
+- {{.}}
+- {{!comments}}
+
+- {{>partials}}
+
+
+
+1. {{keyName}}简单的变量替换。
+2. {{#keyName}} {{/keyName}}以#开始、以/结束表示区块，它会根据当前上下文中的键值来对区块进行一次或多次渲染。它的功能很强大，有类似if、foreach的功能。
+3. {{^keyName}} {{/keyName}}该语法与{{#keyName}} {{/keyName}}类似，不同在于它是当keyName值为null, undefined, false时才渲染输出该区块内容。
+4. {{.}} {{.}}表示枚举，可以循环输出整个数组
+5. {{! }}表示注释
+6. {{>partials}}以>开始表示子模块，当结构比较复杂时，我们可以使用该语法将复杂的结构拆分成几个小的子模块。
+
+==待补充，后面见到细说==
+
+
+
+#### 10.v-pre:
 
 ```html
 <h2 v-pre>{{message}}</h2>
@@ -10,7 +263,7 @@
 
 
 
-#### 2.v-bind，v-on：
+#### 11.v-bind，v-on：
 
 语法糖（简写）：
 
@@ -20,7 +273,7 @@
 
 
 
-#### 3.动态参数:
+#### 12.动态参数:
 
 可以用方括号括起来的 JavaScript 表达式作为一个指令的参数：
 
@@ -40,7 +293,7 @@
 
 
 
-#### 4.模板内的表达式：
+#### 13.模板内的表达式：
 
 模板内的表达式非常便利，但是设计它们的初衷是用于简单运算的。
 
@@ -130,7 +383,7 @@ computed的set,get方法：
 
 <img src="C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210519141755795.png" alt="image-20210519141755795" style="zoom:50%;" />
 
-#### 5.class绑定style:
+#### 14.class绑定style:
 
 ##### 类型：
 
@@ -204,7 +457,7 @@ data: {
 
 ![image-20210519132933910](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210519132933910.png)
 
-#### 6.条件渲染：
+#### 15.条件渲染：
 
 1.在`<template>`元素上使用`v-if`：
 
@@ -247,7 +500,7 @@ data: {
 
 
 
-#### 7.用`key`管理可复用的元素：
+#### 16.用`key`管理可复用的元素：
 
 > Vue 会尽可能高效地渲染元素，通常会复用已有元素而不是从头开始渲染。
 
@@ -278,7 +531,7 @@ Vue 提供了一种方式来表达“这两个元素是完全独立的，不要�
 
 
 
-#### 8.v-for:
+#### 17.v-for:
 
 还支持可选的第二个参数：index（当前项的索引）
 
@@ -300,99 +553,5 @@ Vue 提供了一种方式来表达“这两个元素是完全独立的，不要�
 
 
 
-#### 9.闭包与立即执行函数：
 
-具体例子可见：https://zhuanlan.zhihu.com/p/22465092
-
-```js
-var btns - document.getElementsByTagName('button');
-for(var i = 0; i <btns.length; i++){
-	(function (num){
-		btns[num].addEventListener('click',function(){
-		console.log('第'+num +'个按钮被点击');
-		})
-	})(i)
-	//其中(function(){})()被称为立即执行函数
-}
-```
-
-那么用上箭头函数的话，上述的箭头函数应该可以改为：
-
-((num)=>{...})(i)
-
-那么这个例子就可以改为：
-
-```js
-var btns - document.getElementsByTagName('button');
-for(var i = 0; i <btns.length; i++){
-	((num)=>{
-		btns[num].addEventListener('click',function(){
-		console.log('第'+num +'个按钮被点击');
-		})
-	})(i)
-	//其中(function(){})()被称为立即执行函数
-}
-```
-
-因为函数是有自己的作用域的，所以就不会出现因为var声明，导致打印出现问题的情况，而是会准确的输出预想的数字。
-
-其中立即执行函数最后面的`()`内的`i`，会传入到`num`中，此后，num的值会一直保持不变。
-
-
-
-#### 10.const常量：
-
-1.一旦给const修饰的标识符被赋值之后，不能修改
-
-2.在使用const定义标识符，必须进行赋值
-
-3.常量的含义是指向的对象不能修改，但是可以改变对象内部的属性。
-
-
-
-#### 11.对象字面量增强写法：
-
-`const obj = {}`这种就是通过字面量的方式来创建对象。
-
-1.属性的增强写法：
-
-```js
-const name = 'aa';
-const age = 18;
-const height = 1.88;
-
-const obj = {
-	//es5之前写法是:
-	//name:name;
-	//age:age;
-	//height:height;
-	name,
-	age,
-	height
-}
-```
-
-2.函数的增强写法：
-
-```js
-const obj = {
-	//es5
-	run: function(){
-	
-	},
-	//es6
-	eat(){
-	
-	}
-}
-```
-
-
-
-#### 12.splice()方法：
-
-```js
-//从第 2 位开始删除 1 个元素，插入“trumpet”
-splice(2, 1, "trumpet");
-```
 
