@@ -174,6 +174,8 @@ export default {
 
 
 
+## 6.9
+
 #### 6.展示多视图：
 
 有时候需要同时展示好几个视图，想要同时导入好几个组件，这时候就需要好几个`router-view`，这时候就`命名视图`对展示的内容进行选中。
@@ -181,6 +183,14 @@ export default {
 `router-view`如果没有设置名字，那么默认为`default`
 
 ```vue
+<ul>
+    <li>
+      <router-link to="/">/</router-link>
+    </li>
+    <li>
+      <router-link to="/other">/other</router-link>
+    </li>
+</ul>
 <router-view class="view one"></router-view>
 <router-view class="view two" name="a"></router-view>
 <router-view class="view three" name="b"></router-view>
@@ -282,5 +292,98 @@ const router = new VueRouter({
     }
   ]
 })
+```
+
+
+
+#### 9.路由的懒加载
+
+随着业务功能的增加，js代码包也会变得越来越大，影响页面加载
+
+如果一次性从服务器中请求下来这个页面，耗时很长，用户电脑可能会出现短暂空白
+
+这时候就会用到路由的懒加载
+
+```vue
+const routes = [
+	{
+		path:'/home',
+		//这个就是懒加载
+		component:()=> import('../components/Home')
+	}
+]
+```
+
+```vue
+//也可以在导包的时候直接使用懒加载
+const Home = ()=> import('../components/Home')
+```
+
+
+
+## 6.14
+
+#### 10.路由的参数传递：
+
+> 没有使用`router-link`，使用了`this.router.push()`的方法，将数据传递出去
+
+首先在父组件中（也就是放`router-view`的那个组件），在data中提前定义好需要传递的数据，我用的是`lis`
+
+```vue
+<template>
+  <div>
+    这里送出lis
+    <button @click="send">发送</button>
+    <router-view></router-view>
+  </div>
+</template>
+<script>
+export default {
+  name: "sendmessage",
+  data() {
+    return {
+      lis: {
+        id: 1,
+        name: 2,
+        age: 3,
+      },
+    };
+  },
+  methods: {
+    send() {
+      this.$router.push({
+        name: "sendmessage1",
+        query: {
+          lis: this.lis,
+        },
+      });
+    },
+  },
+};
+</script>
+```
+
+我是用`@click`方法，点击的时候调用`send`方法，将数据通过`this.$router.push`向`history`栈中添加该数据，数据包括`name`（导航的目的地），`query`（这里面就是传递的数据）
+
+接下来，`sendmessage1`组件（也就是要显示的组件）中，就可以尽情使用传递过来的数据了，我是通过在`data`中定义一个`lis`用来接收父组件中传递过来的`父组件lis`，父组件的用`this.$route.query.lis`来表示
+
+```vue
+<template>
+  <div>
+    <ul>
+      <li v-for="item in lis" :key="item">{{ item }}</li>
+    </ul>
+  </div>
+</template>
+<script>
+export default {
+  name: "sendmessage1",
+  data() {
+    return {
+      lis: this.$route.query.lis, 
+    };
+  },
+};
+</script>
 ```
 
