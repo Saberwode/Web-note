@@ -284,5 +284,33 @@ margin:0 auto;其中auto是第二个值，代表了左右居中对齐 而第一�
 
 
 
+#### 51.盒模型设置：
+
+box-sizing:border-box;对于有些情况下，内外边距和边框会对box本身的大小造成影响，进而对布局造成影响
+
+所以通常用`box-sizing:border-box`对其进行设置。这么做的效果就是，他的大小不会因为内外边距而改变，而会将图像本身向内缩小
+
+```css
+*{
+	margin:0;
+	padding:0;
+	box-sizing:border-box;
+	//整体设置，清除内外边距，并且将box-sizing设置为borderbox
+}
+```
+
+#### 52.flex:1;
+
+![image-20210716151753299](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210716151753299.png)
 
 
+
+#### 53.设置断点：
+
+![image-20210716171117075](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210716171117075.png)
+
+
+
+#### 54.背景缩放；
+
+![image-20210718110603955](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210718110603955.png)
