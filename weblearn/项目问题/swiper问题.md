@@ -12,3 +12,10 @@
 
 目前无解，只能硬写
 
+
+
+#### 2.使用方法：
+
+1. `cnpm install swiper vue-awesome-swiper@2.6.7 --save`
+
+目前这个版本轮播图bug少，建议上2.6.7

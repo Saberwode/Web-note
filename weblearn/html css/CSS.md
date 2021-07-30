@@ -314,3 +314,9 @@ box-sizing:border-box;对于有些情况下，内外边距和边框会对box本�
 #### 54.背景缩放；
 
 ![image-20210718110603955](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210718110603955.png)
+
+
+
+#### 55.规定文本不换行：
+
+`white-space:nowrap`
