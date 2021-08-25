@@ -263,6 +263,22 @@ localStorage和sessionStorage:
 
 综上，一般用localStorage比较多
 
+> 需要注意的是，storage只能存储值类型，并不能存储引用类型
+
+- 此时就需要用另一种方法，将引用类型保存为字符串类型
+
+通过`JSON.stringify()`将对象反序列化，==注意：==比如要严格按照json格式编写`'{"name":"123"}'`形如这种的，才可以被`JSON.parse()`给序列化。
+
+思路如下：
+
+1. 通过一个固定的命名空间`localStorage.setItem("test",'{"age":"18","name":"jack"}')`对象以json格式存储下来
+2. 通过`localStorage.getItem("test")`获取到对象
+3. 将对象通过`JSON.parse()`序列化获取到json数据
+4. 通过`obj.name = "mike"`向obj中追加数据
+5. 通过`JSON.stringify()`将json数据反序列化然后存入`localStorage`
+
+
+
 #### 18.手写防抖
 
 防抖就是防止一个事件多次被触发，比如输入事件，按下键，的事件会被不停的触发，所以需要做出防抖，比如延时一段时间后才去执行某个函数
@@ -284,4 +300,33 @@ function debounce(fn,delay = 500){
 
 #### 19.手写节流
 
-对于类似拖拽事件，会触发很多事件，这时候就可以使用节流，每隔一段时间触发一次，而不是每动一下就触发一次，这样体感感觉不到，而且性能也有提升
+对于类似拖拽事件，会触发很多事件，这时候就可以使用节流，每隔一段时间触发一次，而不是每动一下就触发一次，这样体感感觉不到，而且性能也有提升.
+
+与防抖的区别应该就是防抖会将定时器清除，而节流不会将定时器清除，而是直接返回
+
+```
+function throttle(fn,delay = 500){
+  let timer = null;
+  return function (){
+    if(timer){
+      r
+    }
+    timer = setTimeout(() => {
+      fn.apply(this,arguments)
+      timer = null
+    }, delay);
+  }
+}
+```
+
+#### 20.变量和属性
+
+直接上例子
+
+![image-20210824151629362](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210824151629362.png)
+
+这里的storage[key] = val,中`key`必须用`[]`包裹，这样才能保证key是一个变量，如果使用storage的话，就会变成`key`是`storage`的一个属性，对象和属性是不同的，就比如你遍历的时候，可以通过各种`key:value`进行遍历，但是如果你把本来的`key`存成属性的话，那么他就不是`key:value`类型了，他就是所属于该对象的一个属性，而不是一个变量
+
+![image-20210824153247393](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210824153247393.png)
+
+至于那个第一个图中的为啥不能用`.`你可以想象下，他传过来的`key`肯定是个字符串类型，总不能用`."key"`来接受吧，明显的对不对，所以需要用`["key"]`来接收，但是调用的话，依然可以用`.key`，这种操作底层肯定是帮我们做好了。。。
