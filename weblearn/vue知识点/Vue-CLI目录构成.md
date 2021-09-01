@@ -2,9 +2,9 @@
 
 #### 1.Vue CLI目录：
 
-<img src="C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210522211919075.png" alt="image-20210522211919075" style="zoom:67%;" />
+<img src="../../img/image-20210522211919075.png" alt="image-20210522211919075" style="zoom:67%;" />
 
-![image-20210522213941356](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210522213941356.png)
+![image-20210522213941356](../../img/image-20210522213941356.png)
 
 hello						//项目名
 

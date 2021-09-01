@@ -4,7 +4,7 @@
 
 #### 1.如何配路由：
 
-<img src="C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210605201112667.png" alt="image-20210605201112667" style="zoom:33%;" />
+<img src="../../img/image-20210605201112667.png" alt="image-20210605201112667" style="zoom:33%;" />
 
 ​	1.配置路由相关信息：
 
@@ -84,7 +84,7 @@ const routers = [
 
 `router-link`中加入replace属性，就不会有“前进后退功能了”也就是少了`history.pushState()`由push改为replace自然就没有了前进后退
 
-![image-20210608203605568](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210608203605568.png)
+![image-20210608203605568](../../img/image-20210608203605568.png)
 
 
 
@@ -389,6 +389,6 @@ export default {
 
 #### 11.router的注意点
 
-![image-20210827200454278](../../img/image-20210827200454278.png)
+![image-20210827200454278](../../img/image-20210827200454278-1630509970879.png)
 
 在index.js中，对router的定义，子路由中的path不要加`/`不然就会变成绝对路径，而不会加到前面的父组件后面，而是会代替父组件，如果不加`/`的话，就会自动在父路由后面多一层路径，这也是我想要的

@@ -214,7 +214,7 @@ this.childstats.forEach((child)=>{
 
 #### 7.构造函数，实例，原型三者关系：
 
-<img src="C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210528101742190.png" alt="image-20210528101742190" style="zoom:50%;" />
+<img src="../../img/image-20210528101742190.png" alt="image-20210528101742190" style="zoom:50%;" />
 
 
 
@@ -295,7 +295,7 @@ out(...num)//此时传入的是一个个用逗号分隔的单独的参数。
 //等同于 out('1','2','3');
 ```
 
-应用：<img src="C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210528153807329.png" alt="image-20210528153807329" style="zoom:33%;" />
+应用：<img src="../../img/image-20210528153807329.png" alt="image-20210528153807329" style="zoom:33%;" />
 
 
 
@@ -316,7 +316,7 @@ out(...num)//此时传入的是一个个用逗号分隔的单独的参数。
 
 实现1s输出，2s输出，3s输出
 
-<img src="C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210529073846202.png" alt="image-20210529073846202" style="zoom:50%;" />
+<img src="../../img/image-20210529073846202.png" alt="image-20210529073846202" style="zoom:50%;" />
 
 旧方法：
 

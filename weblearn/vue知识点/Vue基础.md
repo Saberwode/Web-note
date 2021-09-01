@@ -381,7 +381,7 @@ var vm = new Vue({
 
 computed的set,get方法：
 
-<img src="C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210519141755795.png" alt="image-20210519141755795" style="zoom:50%;" />
+<img src="../../img/image-20210519141755795.png" alt="image-20210519141755795" style="zoom:50%;" />
 
 #### 14.class绑定style:
 
@@ -455,7 +455,7 @@ data: {
 }
 ```
 
-![image-20210519132933910](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210519132933910.png)
+![image-20210519132933910](../../img/image-20210519132933910.png)
 
 #### 15.条件渲染：
 

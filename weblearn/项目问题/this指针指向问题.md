@@ -4,7 +4,7 @@
 
 举个栗子，先上一个vscode提示的截图
 
-![image-20210812203302343](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210812203302343.png)
+![image-20210812203302343](../../img/image-20210812203302343.png)
 
 左边是我在最顶层定义的一个stack，右边是我想对其进行push
 
@@ -12,7 +12,7 @@
 
 如果这还不够明显的话，那么再来一个对照
 
-![image-20210812203716091](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210812203716091.png)
+![image-20210812203716091](../../img/image-20210812203716091.png)
 
 这个是将`this`去掉之后的提示
 

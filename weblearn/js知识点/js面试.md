@@ -86,7 +86,7 @@ function deepClone(obj={}){
 
 #### 5.truly和falsely变量
 
-![image-20210816152733182](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210816152733182.png)
+![image-20210816152733182](../../img/image-20210816152733182.png)
 
 ```js
 !!0 === false
@@ -113,13 +113,13 @@ instanceof会根据原型链一层一层的往上找，如果找到了就会返�
 
 #### 7.隐式原型和显式原型
 
-![image-20210816192506268](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210816192506268.png)
+![image-20210816192506268](../../img/image-20210816192506268.png)
 
 `__proto__`是隐式原型`prototype`是显式原型
 
 #### 8.原型链
 
-![image-20210816194040816](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210816194040816.png)
+![image-20210816194040816](../../img/image-20210816194040816.png)
 
 对于原型链，我是这么理解的：
 
@@ -163,13 +163,13 @@ class jQuery {
 
 #### 10.闭包
 
-![image-20210816232637465](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210816232637465.png)
+![image-20210816232637465](../../img/image-20210816232637465.png)
 
 对于闭包，对自由变量的查找，是从函数定义的地方开始的，然后向上级作用域一层一层的查找，直到window，而不是在执行的地方
 
 #### 11.property和attribute
 
-![image-20210817145854546](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210817145854546.png)
+![image-20210817145854546](../../img/image-20210817145854546.png)
 
 尽量使用property，这个引起dom渲染的可能性较小
 
@@ -177,7 +177,7 @@ class jQuery {
 
 #### 12.转化为数组
 
-![image-20210817150706265](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210817150706265.png)
+![image-20210817150706265](../../img/image-20210817150706265.png)
 
 `Array.prototype.slice.call(转化对象)`
 
@@ -185,7 +185,7 @@ class jQuery {
 
 #### 13.dom操作性能优化
 
-![image-20210817152344006](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210817152344006.png)
+![image-20210817152344006](../../img/image-20210817152344006.png)
 
 通过createDocumentFragment()，创建一个文档片段，插入到文档片段的dom元素并不会立即被渲染，会在后续appendChild中统一渲染
 
@@ -193,11 +193,11 @@ class jQuery {
 
 #### 14.事件代理（基于冒泡）
 
-![image-20210817160748449](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210817160748449.png)
+![image-20210817160748449](../../img/image-20210817160748449.png)
 
 由于事件的冒泡行为，事件会向上进行传递
 
-![image-20210817161821832](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210817161821832.png)
+![image-20210817161821832](../../img/image-20210817161821832.png)
 
 
 
@@ -209,17 +209,17 @@ class jQuery {
 
 另外也可以通过ajax传递
 
-![image-20210817231043221](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210817231043221.png)
+![image-20210817231043221](../../img/image-20210817231043221.png)
 
 2.CORS通过服务器进行设置
 
-![image-20210817231222494](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210817231222494.png)通过服务端设置可信任的端口或者域名
+![image-20210817231222494](../../img/image-20210817231222494.png)通过服务端设置可信任的端口或者域名
 
 
 
 #### 16.手写ajax
 
-![image-20210817232633502](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210817232633502.png)
+![image-20210817232633502](../../img/image-20210817232633502.png)
 
 ```js
 function ajax(url){

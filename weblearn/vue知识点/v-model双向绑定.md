@@ -187,6 +187,6 @@ v-model绑定的是value值。
 </html>
 ```
 
-<img src="C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210520152021154.png" alt="image-20210520152021154" style="zoom: 33%;" />
+<img src="../../img/image-20210520152021154.png" alt="image-20210520152021154" style="zoom: 33%;" />
 
 <img src="C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210520152137193.png" alt="image-20210520152137193" style="zoom:50%;" />
