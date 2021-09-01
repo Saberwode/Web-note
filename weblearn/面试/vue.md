@@ -185,7 +185,6 @@ function request(options){
   }
   return service(options)
 }
-
 ```
 
 接着就是对axios函数请求方式的函数外封装
