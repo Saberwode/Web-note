@@ -341,3 +341,11 @@ function throttle(fn,delay = 500){
 ![image-20210824153247393](C:\Users\gjm\AppData\Roaming\Typora\typora-user-images\image-20210824153247393.png)
 
 至于那个第一个图中的为啥不能用`.`你可以想象下，他传过来的`key`肯定是个字符串类型，总不能用`."key"`来接受吧，明显的对不对，所以需要用`["key"]`来接收，但是调用的话，依然可以用`.key`，这种操作底层肯定是帮我们做好了。。。
+
+#### 21.执行顺序问题：
+
+直接上结论：`process.nextTick>promise.Trick()>promise的回调>async>setTimeout>setImmediate`
+
+最开始运行的肯定是放在最顶层的没有包装的
+
+接着就是nextTick，promise，setTimeout，setimmediate。

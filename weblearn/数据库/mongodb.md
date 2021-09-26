@@ -135,3 +135,25 @@ const res = await User.findOne({
    },'userId userName')
 ```
 
+#### 3.返回数据库指定字段
+
+例如：
+
+```sql
+const res = await User.find({},'userId userName userPwd')
+```
+
+第一个参数是查询条件，第二个参数是返回的字段，返回字段的设置方式有三种，可用于不同的场景
+
+```sql
+1.'userId userName userEmail' ##用空格分隔开
+```
+
+```sql
+2.{userId:1,_id:0} ##不返回id字段
+```
+
+```sql
+3.select('userId') ##返回userId
+```
+
