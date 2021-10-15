@@ -188,3 +188,277 @@ watch: {
 
 <img src="../../img/image-20211006221046686.png" alt="image-20211006221046686" style="zoom:50%;" />
 
+- 使用babel-loader将es6代码转化为es5<img src="../../img/image-20211006222105174.png" alt="image-20211006222105174" style="zoom:50%;" /><img src="../../img/image-20211006222513315.png" alt="image-20211006222513315" style="zoom:50%;" />
+
+- 另外也可以通过babel.config.js的方式去配置babel<img src="../../img/image-20211006223047802.png" alt="image-20211006223047802" style="zoom:50%;" />
+
+- 在js文件中对vue进行打包<img src="../../img/image-20211007094041239.png" alt="image-20211007094041239" style="zoom:50%;" />
+
+<img src="../../img/image-20211007094110806.png" alt="image-20211007094110806" style="zoom:50%;" />
+
+- 因为vue打包后会有很多不同的版本解析，如果使用webpack构建的话，需要对其指定`.esm-bundler.js`进行解析
+- webpack自动编译，watch，热更新<img src="../../img/image-20211008095923414.png" alt="image-20211008095923414" style="zoom:50%;" />
+
+- **devserve**中contentbase属性，可以设置，如果当webpack找不到文件资源的时候，可以去contentbase目录中进行查找
+
+#### 11.vue3 组件通讯
+
+父子通讯中，父传子没什么特别，子传父有些许不同
+
+- 需要在子组件中添加`emits`属性
+
+  ```js
+  export default {
+      emits:["add", "sub"],
+      methods: {
+        increment(){
+          console.log('+1');
+          this.$emit("add");
+        },
+        decrement(){
+          console.log("-1");
+          this.$emit("sub");
+  
+        }
+      },
+  ```
+
+- 在父组件中监听事件
+
+  ```vue
+  <Counter-Operation @add="increment" @sub="decrement"></Counter-Operation>
+  ```
+
+另外就是通过`provide`和`inject`进行跨组件通讯
+
+- 在父组件中写入
+
+  ```js
+  export default {
+      components:{
+        home
+      },
+      provide:{
+        name:'why',
+        age:'18'
+      }
+    }
+  ```
+
+- 在孙子组件中写入
+
+  ```js
+  export default {
+      inject:["name","age"]
+    }
+  ```
+
+此时就可以在孙子组件中拿到`name`和`age`两个属性
+
+**如果希望provide中内容为响应式：**
+
+<img src="../../img/image-20211012165846388.png" alt="image-20211012165846388" style="zoom:50%;" />
+
+在vue3中，需要引入computed函数，设置对应的值为响应式，**注意：**此时computed会返回一个ref对象，如果想获取到正常的值，需要通过`.value`进行调用
+
+#### 12.插槽
+
+比较重要常用的就是作用域插槽
+
+直接上代码
+
+App.vue
+
+```vue
+<template>
+  <div>
+    <slot-test :names="names">
+      <template v-slot="soltProps">
+        <button >{{soltProps.item}}</button>
+      </template>
+    </slot-test>
+  </div>
+</template>
+
+<script>
+import SlotTest from './SlotTest.vue';
+  export default {
+    components:{
+      SlotTest
+    },
+    data() {
+      return {
+        names:["甲","乙","丙"]
+      }
+    },
+  }
+</script>
+<style scoped>
+</style>
+```
+
+SlotTest.vue
+
+```vue
+<template>
+  <div>
+    <template v-for="item in names" :key="item">
+      <slot :item="item"></slot>
+    </template>
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    return {};
+  },
+  props: {
+    names: {
+      type: Array,
+      default: () => [],
+    },
+  },
+};
+</script>
+<style scoped>
+</style>
+```
+
+因为模板在编译的时候是有作用域的，在app.vue中，button虽然放在子组件中，但是他实际上会被编译到当前作用域中，也就是app.vue，所以这个button他访问不到子组件`SlotTest`的属性和方法，此时如果需要进行访问的话，就比如此时1需要进行列表渲染，展示数据，这时候就需要用到作用域插糟。
+
+用法也比较简单，就是在子组件中对`slot`标签通过`v-bind`绑定所需要的对应的属性，在父组件中通过添加`template`标签
+
+#### 13.动态组件
+
+有时候会有需求，需要动态渲染某一个组件，可以根据后台返回的名称，去渲染对应的组件
+
+此时就可以用`<component is="name"></component>`通过动态组件去渲染，动态渲染中`is`后跟的是组件名称，组件名称可以是在全局中`component`中注册的全局组件，也可以是在每个父页面中注册的局部组件`components`属性中定义的组件
+
+#### 14.keep-alive
+
+作为一个父级标签，将其中的子组件保持不被销毁的状态，其中有`include`属性，可以设置需要缓存的组件，其中`include`中参数为`Array`，`String`，正则，三种，其中，参数为每个组件的`name`属性名
+
+#### 15.异步组件
+
+为了优化首页渲染的时间，尽可能的减少单一文件的大小，可以采用异步组件的方式，将组件进行分包操作，也就是将各个组件分别进行打包，而不是打包到一个文件中，这样在请求的时候，就可以先请求主要文件，等到用到组件的时候，在去请求异步组件
+
+在vue3中，vue提供了一种方式，可以实现异步组件
+
+```js
+const AsyncCategory = defineAsyncComponent(() => import("./AsyncCategory.vue"))
+```
+
+<img src="../../img/image-20211014102352512.png" alt="image-20211014102352512" style="zoom:50%;" />
+
+<img src="../../img/image-20211014102950887.png" alt="image-20211014102950887" style="zoom:50%;" />
+
+另外一种方式就是传入一个对象
+
+开发中主要是通过路由来加载异步组件的
+
+#### 14.$refs的使用
+
+$refs是给元素或者组件绑定一个ref的attribute属性
+
+通过对元素或者组件内添加`ref`属性，设置属性名，然后，该属性名就成为该元素的实例
+
+之后就可以在函数中通过`this.$refs.名称`访问注册过`ref attribute`的所有dom元素和组件实例
+
+#### 15.缓存组件的生命周期
+
+actived和dectived两个生命周期钩子函数，有时候会有需求希望知道该组件是否活跃，或者说该用户是否已经切换到其他组件，这个一般是跟着`keep-alive`一起进行添加，因为添加过程中该组件不会被销毁
+
+这两个钩子 函数从字面意思就可以看出，一个是处于活跃状态，一个是处于非活跃状态
+
+#### 16.在组件中使用v-model
+
+在子组件中需要通过props去注册一个`modelValue`的属性
+
+这个东西的应用场景可以是：比如想去封装一个input组件，同时我想要在父组件中知道这个input中的值，这时候很自然得到就希望去使用`v-model`去实现一个双向绑定
+
+<img src="../../img/image-20211014144830186.png" alt="image-20211014144830186" style="zoom:50%;" />
+
+<img src="../../img/image-20211014144836055.png" alt="image-20211014144836055" style="zoom:50%;" />
+
+在组件上绑定`v-model`的时候，在发生更新的时候，需要去传递一个事件，这个事件是`update:modelValue`通过这个事件传回父组件
+
+另外，如果需要对两个或者多个input进行组件的双向绑定的话，可以使用`<hyinput v-model="message" v-model:title="title"></hyinput>` 通过在`v-model`后面加上一个`:title`其中title可以任意设置，这样就可以实现双向绑定两个数据，多个数据同理
+
+在子组件中需要传递的事件就会变成两个`update:title`和`update:modelValue`两个，同时需要在计算属性中对他进行get()，set()方法的绑定
+
+#### 17.使用gsap库实现动画效果
+
+![image-20211014195525730](../../img/image-20211014195525730.png)
+
+通过gsap.to()实现`0-100`缓慢增加
+
+#### 18.transition-group
+
+```vue
+<template>
+  <div>
+    <button @click="addNum">添加数字</button>
+    <button @click="removeNum">删除数字</button>
+    <button @click="shuffleNum">数字洗牌</button>
+    <transition-group tag="p" name="why">
+      <span v-for="item in numbers" :key="item" class="item">
+        {{item}}
+      </span>
+    </transition-group>
+  </div>
+</template>
+
+<script>
+  export default {
+    data() {
+      return {
+        numbers:[0,1,2,3,4,5,6,7,8,9],
+        numCounter:10
+      }
+    },
+    methods: {
+      addNum(){
+        this.numbers.splice(this.randomIndex(),0,this.numCounter++)
+      },
+      removeNum(){
+        this.numbers.splice(this.randomIndex(),1)
+      },
+      randomIndex(){
+        return Math.floor(Math.random()*this.numbers.length)
+      }
+    },
+  }
+</script>
+
+<style scoped>
+.item{
+  margin-right: 10px;
+  display: inline-block;
+}
+.why-enter-from,
+.why-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.why-enter-active,
+.why-leave-active{
+  transition: all 1s ease;
+}
+.why-leave-active{
+  position: absolute;
+}
+.why-move {
+  transition:transform 1s ease;
+}
+</style>
+```
+
+可以实现删除操作，数字向下移除，其余向左移除
+
+#### 19.mixin混入
+
+如果有需求，需要多个组件复用同一段代码，可以将这段代码专门封装到一个js文件中，通过export 进行导出，在需要用到的组件中使用`mixins:[]`，将文件名称填进去，就可以复用
+
+<img src="../../img/image-20211015103335227.png" alt="image-20211015103335227" style="zoom:50%;" />
+
+<img src="../../img/image-20211015110132643.png" alt="image-20211015110132643" style="zoom:50%;" />
