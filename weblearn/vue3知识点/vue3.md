@@ -462,3 +462,52 @@ actived和dectived两个生命周期钩子函数，有时候会有需求希望�
 <img src="../../img/image-20211015103335227.png" alt="image-20211015103335227" style="zoom:50%;" />
 
 <img src="../../img/image-20211015110132643.png" alt="image-20211015110132643" style="zoom:50%;" />
+
+#### 20.compositionAPI的使用
+
+vue3的特色之一就是compositionAPI的使用，主要就是通过一个setup()函数，将data，或者methonds和各种钩子函数放到setup()函数里面进行处理
+
+此时需要注意的是，setup()函数中可以有一个返回值，会返回一个对象，其中对象的各种属性，就可以在template中使用，其中返回的可以是普通的属性，或者是函数。
+
+这时候定义的属性不是响应式的，因为setup函数并没有对其中所有定义的普通变量进行一个响应式的绑定，所以需要手动引入函数，进行手动的绑定响应式，其中之一就是`reactive()`函数，`reactive`函数会返回一个对象，这个对象中定义的属性就是响应式的。
+
+<img src="../../img/image-20211016111609892.png" alt="image-20211016111609892" style="zoom:50%;" />
+
+toRefs()多用于在结构中使用，因为通过解构，解构后得到的属性只是相当于赋值，并不是引用，所以并不会变成响应式，所以此时如果想解构后的函数也是响应式的，就需要通过`toRefs()`函数，对info对象当做参数传入。
+
+#### 21.computed和watch
+
+在需要监听一个数据变化的时候就用到了computed，在vue3中也有对应的api
+
+<img src="../../img/image-20211017152147830.png" alt="image-20211017152147830" style="zoom:50%;" />侦听器：<img src="../../img/image-20211017152331215.png" alt="image-20211017152331215" style="zoom:50%;" />
+
+另外一个watch侦听器，可以选择两个api，一个是`wathcEffect`一个是`watch`其中`watchEffect`会立即执行传入的参数一次，目的是收集执行函数中数据的依赖，比如上图中，他会通过第一次立即调用过程中，去收集`name`，`age`的依赖
+
+如果需要停止侦听的话，可以获取`watchEffect`的返回值函数，调用该函数就可以停止侦听
+
+<img src="../../img/image-20211017153119403.png" alt="image-20211017153119403" style="zoom:50%;" />
+
+#### 22.在setup中使用ref
+
+```js
+<h2 ref="title">我是标题</h2>
+setup(){
+	const title = ref(null);
+	return{
+		title
+	}
+}
+```
+
+此时返回的title.value就是返回的`h2`标签对象，他会在挂载之后自动赋值给title，所以可以通过watchEffect触发
+
+#### 23.teleport组件
+
+组件默认是绑定到index.html的#app选择器中的，有时候不想去绑到那个地方，这时候就需要去通过
+
+```html
+<teleport to="#why"></teleport>
+```
+
+此时teleport中的内容就会被绑定到id为why的容器中
+
