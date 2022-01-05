@@ -98,3 +98,30 @@ align = 'center';
 
 这里面字面量类型的作用就是限制align 的取值，只能通过提前选定的字面量类型进行赋值，如果使用其他的值就会报错
 
+#### 6.any类型和unknown类型
+
+这两个的区别在于赋值的对象，any类型可以赋值给任意类型的对象，而unknown只能赋值给any和unknown类型的对象，为了避免将一个不确定类型任意赋值，所以更加推荐使用unknown类型
+
+#### 7.元组类型的应用场景
+
+可能会有一个函数，函数中会`return`一个数组，这个数组中的类型是不固定的，比如有any,string,number,function等等，如果不适用元组类型的话，返回的数组内容默认是arr数组类型，接着在调用的时候，拿到的数组中的数据类型就会全部变成`any`类型，当对一个不清楚类型的对象进行使用的时候，这个对象如果调用了他本身不存在的方法，那么就会存在报错风险。
+
+下面是例子
+
+```ts
+function useState(state: any) {
+  let currentState = state;
+  const changeState = (newState: any) => {
+    currentState = newState;
+  };
+
+  const arr: [any, (newState: any) => void] = [currentState, changeState];
+
+  return arr;
+}
+
+const [counter, setCounter] = useState(10);
+const [] = useState("abc");
+```
+
+这个`useState`函数返回了一个数组，这个数组中包含两个元素，一个是currentState,这个变量类型可能是number类型,也可能是string类型，所以暂时给他一个any。
