@@ -131,3 +131,200 @@ const [] = useState("abc");
 `!!`作用是将其他类型转化为Boolean类型
 
 `??`是一个逻辑操作符，当操作符左侧是null或者是undefined时，返回其右侧操作数，否则返回左侧操作数
+
+#### 9.类型缩小
+
+```ts
+// 1.typeof的类型缩小
+type IDType = number | string
+function printID(id: IDType) {
+  if (typeof id === 'string') {
+    console.log(id.toUpperCase())
+  } else {
+    console.log(id)
+  }
+}
+
+// 2.平等的类型缩小(=== == !== !=/switch)
+type Direction = "left" | "right" | "top" | "bottom"
+function printDirection(direction: Direction) {
+  // 1.if判断
+  // if (direction === 'left') {
+  //   console.log(direction)
+  // } else if ()
+
+  // 2.switch判断
+  // switch (direction) {
+  //   case 'left':
+  //     console.log(direction)
+  //     break;
+  //   case ...
+  // }
+}
+
+// 3.instanceof
+function printTime(time: string | Date) {
+  if (time instanceof Date) {
+    console.log(time.toUTCString())
+  } else {
+    console.log(time)
+  }
+}
+
+class Student {
+  studying() {}
+}
+
+class Teacher {
+  teaching() {}
+}
+
+function work(p: Student | Teacher) {
+  if (p instanceof Student) {
+    p.studying()
+  } else {
+    p.teaching()
+  }
+}
+
+const stu = new Student()
+work(stu)
+
+// 4. in
+type Fish = {
+  swimming: () => void
+}
+
+type Dog = {
+  running: () => void
+}
+
+function walk(animal: Fish | Dog) {
+  if ('swimming' in animal) {
+    animal.swimming()
+  } else {
+    animal.running()
+  }
+}
+
+const fish: Fish = {
+  swimming() {
+    console.log("swimming")
+  }
+}
+
+walk(fish)
+```
+
+#### 10.函数的重载
+
+```ts
+function add(num1: number, num2: number): number;
+function add(num1: string, num2: string): string;
+
+function add(num1: any, num2: any): any {
+  return num1 + num2;
+}
+const result = add(20, 30);
+const result1 = add("bac", "abc");
+
+export {}
+```
+
+上两个add函数是定义函数，第三个函数是实现函数，实现函数是不能被调用的
+
+#### 11.静态属性
+
+类的静态属性，静态方法可以在外部由类进行自由调用，不需要新new出来一个对象
+
+比如：
+
+```ts
+class Student {
+  static time:string = '20'
+}
+console.log(Student.time)
+```
+
+#### 12.接口的使用
+
+- 索引类型
+
+```ts
+interface IndexLanguage {
+  [index: number]: string
+}
+
+const frontLanguage: IndexLanguage = {
+  0: 'html',
+  1: 'css',
+  2: 'javascript',
+  3: 'vue'
+}
+```
+
+- 函数类型
+
+```ts
+interface CalcFn {
+  (n1: number, n2: number): number
+}
+function calc(num1: number, num2: number, calcFn: CalcFn) {
+  return calcFn(num1, num2)
+}
+const add: CalcFn = (num1, num2) => {
+  return num1 + num2
+}
+calc(20, 30, add)
+```
+
+- 接口继承
+
+```ts
+interface ISwim {
+  swimming: () => void
+}
+interface IFly {
+  flying: () => void
+}
+interface IAction extends ISwim, IFly {
+}
+
+const action: IAction = {
+  swimming() {
+  },
+  flying() {
+  }
+}
+```
+
+- 交叉类型
+
+```ts
+// 一种组合类型的方式: 联合类型
+type WhyType = number | string
+type Direction = "left" | "right" | "center"
+// 另一种组件类型的方式: 交叉类型
+type WType = number & string
+interface ISwim {
+  swimming: () => void
+}
+interface IFly {
+  flying: () => void
+}
+type MyType1 = ISwim | IFly
+type MyType2 = ISwim & IFly
+const obj1: MyType1 = {
+  flying() {
+  },
+  swimming() {
+  }
+}
+const obj2: MyType2 = {
+  swimming() {
+  },
+  flying() {    
+  }
+}
+```
+
