@@ -328,3 +328,102 @@ const obj2: MyType2 = {
 }
 ```
 
+#### 13.接口的实现
+
+接口的实现简单来说就是在类或者对象中引入接口，然后对接口中定义的属性或者方法
+
+进行实现，接口中有什么，类中就必须对其进行定义
+
+```ts
+interface ISwim {
+  swimming: () => void
+}
+interface IEat {
+  eating: () => void
+}
+// 类实现接口
+class Animal {
+}
+// 继承: 只能实现单继承
+// 实现: 实现接口, 类可以实现多个接口
+class Fish extends Animal implements ISwim, IEat {
+  swimming() {
+    console.log("Fish Swmming")
+  }
+  eating() {
+    console.log("Fish Eating")
+  }
+}
+class Person implements ISwim {
+  swimming() {
+    console.log("Person Swimming")
+  }
+}
+// 编写一些公共的API: 面向接口编程
+function swimAction(swimable: ISwim) {
+  swimable.swimming()
+}
+// 1.所有实现了接口的类对应的对象, 都是可以传入
+swimAction(new Fish())
+swimAction(new Person())
+swimAction({swimming: function() {}})
+```
+
+#### 14.interface和type的区别
+
+最主要的区别是，interface的定义可以重复，type不可以重复，多次定义interface的时候，会将interface中定义的属性和方法合并起来
+
+```ts
+interface IFoo {
+  name: string;
+}
+interface IFoo {
+  age: number;
+}
+const foo: IFoo = {
+  age: 18,
+  name: "tset",
+};
+```
+
+```ts
+type IFoo =  {
+  name: string,
+  age: number
+}
+```
+
+![image-20220106103400289](C:\Users\Administration\AppData\Roaming\Typora\typora-user-images\image-20220106103400289.png)
+
+#### 15.枚举类型
+
+```ts
+enum Direction {
+  LEFT = 10,
+  RIGHT = 9,
+  TOP,
+  BOTTOM,
+}
+function turnDirection(direction: Direction) {
+  console.log(Direction.LEFT);
+  console.log(Direction.RIGHT);
+  console.log(Direction.TOP);
+}
+turnDirection(Direction.LEFT);
+function foo<T, E>(a: T,b:E){
+  console.log('');
+}
+foo(10,10)
+```
+
+#### 16.TypeScript声明文件
+
+当引入外部的包的时候，有时候会出现typeScript不识别的情况，原因就是这个包里面缺少`.d.ts`声明文件，解决办法就是从ts的社区中查找
+
+`https://www.typescriptlang.org/dt/search?search=`
+
+通过社区查询是否有现成的声明文件，如果没有的话，就要自己写了
+
+
+
+另外一种情况是，如果在`index.html`的script标签中，写入`const name = 'test'`，在main.ts的文件中，如果是按照道理来说的话，是可以运行的，因为main.ts的东西在运行的时候是会插入到script标签的下面的，但是ts并不会知道script标签的内容，所以，可以通过声明文件对其进行声明。声明文件的作用就是帮助ts知道自己有定义这么个东西，并不关心具体实现
