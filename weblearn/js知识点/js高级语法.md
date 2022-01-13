@@ -50,3 +50,49 @@ reduce()查找
 #### 7.闭包
 
 闭包是由两部分组成的：函数+可以访问到的外部自由变量
+
+#### 8.this绑定规则
+
+this的绑定与调用者有关，与this函数所处的位置无关
+
+- 默认绑定：当一个函数作为独立函数使用的时候，他的this指向window
+
+  ```js
+  let function foo() {
+  	console.log(this)
+  }
+  foo()
+  ```
+
+  此时foo()没有调用者，他是作为一个独立函数调用。此时this就指向window
+
+- 隐式绑定：当一个函数有调用者，那么js就会自动将this指向调用者，这个是属于js自动帮忙完成的，所以是隐式绑定。
+
+  ```js
+  let obj1 = {
+  	name: 'obj1',
+  	foo: function() {
+  		console.log(this)
+  	}
+  }
+  let obj2 = {
+  	name: 'obj2',
+  	bar: obj1.foo
+  }
+  obj2.bar()
+  ```
+
+  此时是obj2调用的bar()函数，虽然bar函数是obj1调用的foo函数，但是最终结果的调用是obj2调用的，this再次绑定到了obj2上面。所以此时this指向的还是obj2。
+
+- 显示绑定：apply-call这两种方式都是显示绑定this的，这两个的不同点就是`call`传递的参数是单个参数，以逗号分隔，而`apply`传递参数是以`[]`数组的形式进行传递。call传参使用是属于剩余参数的语法
+
+  - 另外一个显式绑定的函数就是bind,比如说我想多次调用一个绑定其他this的函数，如果每次都要通过`.call`进行绑定会很麻烦，所以可以使用bind
+
+    ```js
+    foo.call('aaa')
+    foo.call('aaa') // 需要多次绑定
+    let newFoo = foo.bind('aaa')
+    newFoo()
+    ```
+
+    通过`bind`显式的绑定this，此时bind会返回一个新的函数，以后通过这个新的函数，该函数的this值默认就是`'aaa'`，虽然这个新的函数是作为独立函数进行调用的，但是因为之前已经通过bind进行显式绑定了，所以这个函数的this值会将隐式绑定的window进行覆盖
