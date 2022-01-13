@@ -96,3 +96,33 @@ this的绑定与调用者有关，与this函数所处的位置无关
     ```
 
     通过`bind`显式的绑定this，此时bind会返回一个新的函数，以后通过这个新的函数，该函数的this值默认就是`'aaa'`，虽然这个新的函数是作为独立函数进行调用的，但是因为之前已经通过bind进行显式绑定了，所以这个函数的this值会将隐式绑定的window进行覆盖
+
+#### 9.作用域问题
+
+对象没有作用域
+
+#### 10.手写call方法
+
+在实现这个函数之前，有几个前置问题需要解决
+
+- 如果要实现通用性，那么必须要每个函数中都要有手写的call方法，暂时命名为`lxCall`，所以这个函数我需要写到`Function`这个构造器的`prototype`中，在他的原型中定义这个函数
+
+- 另一个问题就是我需要获取到这个调用者，是谁调用的`lxCall`，因为`call`方法除了可以绑定`this`，他也会帮助去执行函数，所以我需要获取到调用者本身
+
+  ```js
+  Function.prototype.lxCall = function() {
+    const fn = this
+    fn()
+  }
+  
+  function foo() {
+    console.log('foo函数被执行');
+  }
+  
+  function sum(num1, num2) {
+    return num1+ num2
+  }
+  foo.lxCall()
+  ```
+
+  通过this的隐式绑定，我在`.lxCall`方法中的`this`是指向调用者的，所以就可以通过上述代码实现绑定和调用
