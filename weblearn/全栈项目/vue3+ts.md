@@ -150,3 +150,59 @@ export default store
 #### 5.按需引入element-plus
 
 需要下载插件`npm install babel-plugin-import -D`
+
+不太需要按需引入
+
+#### 6.环境配置
+
+如果遇到需要切换环境的情况，比如生产、开发、测试环境，可以通过`process.env.NODE_ENV`这个语句进行判断，webpack在打包的时候会将当时的环境通过`DefinePlugin`插件注入到这个语句中，`process.env.NODE_ENV`在开发环境的值为`development`，在生产环境的值为`production`，在测试环境的值为`test` 
+
+另外，在vue-cli脚手架的环境下，可以通过在根目录上创建`.env.development`、`.env.production`、`.env.test`三个文件，文件内部中文件命名需要按照以以下格式`VUE_APP_随意内容`，然后通过`process.env.VUE_APP_随意内容`取到
+
+#### 7.ts封装axios
+
+`Promise`本身是可以有类型的，在ts中
+
+```ts
+new Promise<string>((resolve, reject) => {
+	//此时，resolve中的参数必须是string类型
+	resolve('123')
+}).then((res) => {
+  console.log(res.length)
+})
+```
+
+如果通过泛型传入其他类型的，例如
+
+![image-20220225092215579](../../img/image-20220225092215579.png)
+
+
+
+提示中就指出传入的参数需要是`string`或者`promiselike<string>`,此时的泛型所指定的<string>也表明`.then()`中的res参数类型也是string类型，所以在之后的回调函数中就可以看到`res.length`的属性提示
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
