@@ -144,3 +144,9 @@ export default store
 ```
 
 最后需要在`main.ts`文件中对导出的`vuex`进行注册`app.use(store)`
+
+
+
+#### 5.按需引入element-plus
+
+需要下载插件`npm install babel-plugin-import -D`
