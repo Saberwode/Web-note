@@ -312,11 +312,28 @@ export interface AxiosInterceptorManager<V> {
 
    这时候就可以在`service/index.ts`中在实例化的时候传入拦截器了
 
-   
+6. 为每个请求单独添加自己的拦截器
 
-   
+   因为请求需要添加自己的拦截器，所以此时请求的参数`config`的类型就不能是`AxiosRequestConfig`类型了，修改成`XRequestConfig`类型
 
-   
+   ```ts
+   export interface XRequestConfig extends AxiosRequestConfig {
+     interceptors?: XRequestInterceptors
+     showLoading?: boolean
+   }
+   ```
+
+   因为已经将请求`request`进行了封装，所以可以自己手动实现一个拦截器：
+
+   ![image-20220226163758292](../../img/image-20220226163758292.png)
+
+   因为拦截器本身就相当于在发送请求前去调用一个函数，处理相关逻辑，所以要实现每个请求单独拦截的话，就可以在发送请求前，手动去调用传进来这个函数，也就是`该请求需要单独拦截所要实现的逻辑代码`，官方的拦截器是自动的调用，如果要自己用就需要手动去调
+
+
+
+
+
+
 
 
 
