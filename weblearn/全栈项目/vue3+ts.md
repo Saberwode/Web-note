@@ -161,6 +161,8 @@ export default store
 
 #### 7.ts封装axios
 
+> #### ts相关
+
 `Promise`本身是可以有类型的，在ts中
 
 ```ts
@@ -180,17 +182,141 @@ new Promise<string>((resolve, reject) => {
 
 提示中就指出传入的参数需要是`string`或者`promiselike<string>`,此时的泛型所指定的<string>也表明`.then()`中的res参数类型也是string类型，所以在之后的回调函数中就可以看到`res.length`的属性提示
 
+在axios的声明文件中看到这样的代码
 
+```ts
+export interface AxiosInstance extends Axios {
+  (config: AxiosRequestConfig): AxiosPromise;
+  (url: string, config?: AxiosRequestConfig): AxiosPromise;
+}
+```
 
+上面代码的第二行表示，`(config: AxiosRequestConfig)`是一个函数，他的类型是`AxiosPromise`类型，这里面比较特殊的就是这个函数并没有定义函数名，只要是参数类型符合规则的，就是相应的类型
 
+```ts
+export interface AxiosInterceptorManager<V> {
+  use<T = V>(onFulfilled?: (value: V) => T | Promise<T>, onRejected?: (error: any) => any): number;
+  eject(id: number): void;
+}
+```
 
+上述代码中，接口`AxiosTnterceptorManager`中传入了一个泛型`V`。这个接口中定义了一个名为`use`的函数，`use`函数也传入了一个泛型`T`这个泛型类型是`V`，同时`use`函数中也有也有两个指定名字的函数作为参数`onFulfilled`与`onRejected`
 
+#### 
 
+> #### 正式封装axios
 
+1. 这里为了封装axios创建了一个`service`文件夹，该文件夹的入口文件为`index.ts`
 
+   ```ts
+   import XRequest from './request'
+   import { BASE_URL, TIME_OUT } from './request/config'
+   
+   const xRequest = new XRequest({
+     baseURL: BASE_URL,
+     timeout: TIME_OUT
+   })
+   export default xRequest
+   ```
 
+   该文件导出了已经封装好了的`xRequest` ~~(随意命名的，yylx最后字母命名的)~~ 
 
+   之后在`request`文件夹中编写`XRequest`类，用来封装axios
 
+2. 为了解决当有多个不同`base_url`需要进行网络请求的问题，在`XRequest`类中创建了`instance`用于保存`axios`实例
+
+   ```ts
+   import axios from 'axios'
+   import type { AxiosInstance, AxiosRequestConfig } from 'axios'
+   
+   class XRequest {
+     // 创建一个axios实例
+     instance: AxiosInstance
+     constructor(config: AxiosRequestConfig) {
+       // 在创建xRequest实例的时候，传入config，之后赋值给该实例的instacne
+       // 这样就可以保证每个xRequest实例保持独立，当BASE_URL不同的时候，每个xRequest实例发送请求时互不干扰
+       this.instance = axios.create(config)
+     }
+     request(config: AxiosRequestConfig): void {
+       // 这里的instance就相当于一个axios实例，他有axios实例可以拥有的所有方法
+       this.instance.request(config).then((res) => {
+         console.log(res)
+       })
+     }
+   }
+   
+   export default XRequest
+   ```
+
+   这里需要注意的是在构造函数`constructor`中的参数`config`的类型如何确定：因为`config`要作为`axios.create()`的参数传递进去，所以要符合这个函数的参数类型规定，这个类型在`axios`的ts声明文件中有定义，可以直接拿过来用
+
+3. 在axios实例创建好之后，就可以封装request请求了，通过`this.instance.request(config).then(res=>{})`，之后通过`xRequest.request(config)`就可以实现通过封装的axios发送网络请求
+
+4. > 下面就是重头戏添加拦截器
+
+   封装好的`XRequest`类希望可以传入`interceptors`拦截器，同时也可以传入`AxiosRequestConfig`类型的属性，所以此时传入的`config`就不能是`AxiosRequestConfig`类型了，需要自定义一个接口`XRequestConfig`类型去包括`AxiosRequestConfig`和`interceptors`属性
+
+   ```ts
+   interface XRequestConfig extends AxiosRequestConfig {
+   	interceptors?: XRequestInterceptors 
+   }
+   ```
+
+   然后需要确定拦截器中有哪些属性
+
+   ```ts
+   interface XRequestInterceptors {
+   	// 这里面的config类型可以从this.instance.interceptors.request.use()中查看
+   	requestInterceptor?: (config: AxiosRequestConfig) => AxiosRequestConfig
+   	requestInterceptorCatch?: (error: any) => any
+       // 这里的congfig类型查看地方同上
+       responseInterceptor?: (config: AxiosResponse) => AxiosResponse
+       responseInterceptorCatch?: (error: any) => any
+   }
+   ```
+
+   ![image-20220226100344015](../../img/image-20220226100344015.png)
+
+   接口类型出处：当调用`use()`方法的时候，其参数类型就被规定了，其中传入的泛型`V`，就是`config`的类型
+
+5. 完整的封装类XRequest
+
+   ```ts
+   class XRequest {
+     // 创建一个axios实例
+     instance: AxiosInstance
+     interceptors?: XRequestInterceptors
+     // 自定义的接口类型，除了AxiosRequestConfig，还有额外的可选拦截器属性
+     constructor(config: XRequestConfig) {
+       // 在创建xRequest实例的时候，传入config，之后赋值给该实例的instacne
+       // 这样就可以保证每个xRequest实例保持独立，当BASE_URL不同的时候，每个xRequest实例发送请求时互不干扰
+       this.instance = axios.create(config)
+       this.interceptors = config.interceptors
+       this.instance.interceptors.request.use(
+         this.interceptors?.requestInterceptor,
+         this.interceptors?.requestInterceptorCatch
+       )
+       this.instance.interceptors.response.use(
+         this.interceptors?.responseInterceptor,
+         this.interceptors?.responseInterceptorCatch
+       )
+     }
+     request(config: AxiosRequestConfig): void {
+       // 这里的instance就相当于一个axios实例，他有axios实例可以拥有的所有方法
+       this.instance.request(config).then((res) => {
+         console.log(res)
+       })
+     }
+   }
+   ```
+
+   这时候就可以在`service/index.ts`中在实例化的时候传入拦截器了
+
+   
+
+   
+
+   
 
 
 
