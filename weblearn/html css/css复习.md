@@ -25,7 +25,13 @@ css选择器分为五类：
     - `:first-of-type`
     - `:last-child`
     - `:nth-child(n)`选择作为其父第n个元素（选同级）
-
+      - 比如 `ul li:nth-child(n)`
+    - `:nth-of-type(n)`相较于上一个选择器，这个可以筛选出同种类型的元素
+      - 比如`.box > div:nth-of-type(3)`此时会选出第三个div元素，会自动排除其他的元素
+    - <img src="../../img/image-20221024192209840.png" alt="image-20221024192209840"  />
+    - `:root`，根元素=HTML元素
+    - `:empty`代表里面完全空白的元素
+  
 - 伪元素选择器
   - `::after` 在元素之后插入
   - `::before`在元素之前插入
