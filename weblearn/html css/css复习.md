@@ -23,7 +23,7 @@ css选择器分为五类：
   - css伪类
     - `:first-child` 第一个子元素
     - `:first-of-type`
-    - `:last-child`
+    - `:last-child`，相对于父元素的第几个子元素还是同级
     - `:nth-child(n)`选择作为其父第n个元素（选同级）
       - 比如 `ul li:nth-child(n)`
     - `:nth-of-type(n)`相较于上一个选择器，这个可以筛选出同种类型的元素
